@@ -1,10 +1,3 @@
-const express = require('express');
-const routes = require('./routes/index');
+const argParser  = require('./util/commander');
 
-const app = express();
-
-app.use(routes);
-
-app.listen(3000, () => {
-  console.log('ELECTION IS RUNNING');
-})
+argParser();

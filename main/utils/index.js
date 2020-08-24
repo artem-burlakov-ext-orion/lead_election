@@ -1,6 +1,8 @@
 const fs = require('fs').promises;
 const path = require('path');
 
+
+
 const getPath = (fileName) => {
   return path.join(__dirname, 'json', fileName);
 }
@@ -17,7 +19,7 @@ getNewNode = async (allNodes) => {
       id: 1,
       ip: '127.0.0.1',
       port: '3001',
-      isKing: true,
+      isLeader: true,
     }
   }
   const newNodeId = await getLatestNodeId() + 1;
@@ -25,12 +27,12 @@ getNewNode = async (allNodes) => {
     id: newNodeId,
     ip: '127.0.0.1',
     port: `${newNodeId + 1}`,
-    isKing: false,
+    isLeader: false,
   };
   return newNode;
 };
 
-getNodesList = async () => {
+const getNodeList = async () => {
   const json = await fs.readFile(getPath('config.json'));
   const allNodes = JSON(parse(json));
   return allNodes;
@@ -46,14 +48,27 @@ const genNewNode = async () => {
   return newNode;
 };
 
-const addNode = async () => {
+const addNewNode = async () => {
   const newNode = await genNewNode();
   const allNodes = await getNodeList();
   allNodes.push(newNode);
   await addNodeListToJson(allNodes);
 };
 
-const getNodeIpList = async () => {
+const getNodeUrlList = async (list) => {
+  return list.map((node) => `${node.ip}:${node.port}`);
+};
+
+const getFollowerList = async () => {
   const list = await getNodeList();
-  return list.map((node) => node.ip);
+  return list.filter((node) => !node.isLeader);
+};
+
+
+
+module.exports = {
+  addNewNode,
+  getFollowerList,
+  getNodeUrlList,
+  getNodeList,
 };

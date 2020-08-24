@@ -1,15 +1,27 @@
-require('dotenv').config();
-const { CronJob } = require('cron');
+const {
+  addNewNode,
+} = require('../utils/index');
 
-const moveToCron = (func) => {
-  const job = new CronJob(`*/${process.env.CHECK_PERIOD_IN_SECONDS} * * * * *`, func);
-  job.start();
-  console.log('JOB RUNNING', job.running());
-}
+const addNode = async (req, res, next) => {
+  try {
+    await addNewNode();
+    res.status(200);
+    next();
+  } catch (e) {
+    next(e);
+  }
+};
 
-const nodes = [];
-
-const addNode = (params) => {
+const start = (url) => {
   
 }
+
+const startNode = async (req, res, next) => {
+  const url = req.params.config;
+  start(url);
+
+
+}
+
+module.exports = addNode;
 
