@@ -1,9 +1,9 @@
 const { Router } = require('express');
-const { sendResponse } = require('../middlwares/index');
+const { sendOk } = require('../middlwares/index');
 
 const router = Router();
 
-router.get('/ALIVE', sendResponse)
+router.get('/ALIVE', sendOk);
 
 
 module.exports = router;

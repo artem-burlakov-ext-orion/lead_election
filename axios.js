@@ -1,28 +1,22 @@
 const axios = require('axios');
-const getNodeUrls = require('./util/index');
+const getStartedNodeUrls = require('./util/index');
 
 const checkLeader = () => {
 
 }
 
-const startElection = () => {
-
+const startElection = (id) => {
+  const promises = await checkNodes(id);
 }
 
-const addNodeConfig = () => {
-  
-
-}
-
-const checkNodes = async () => {
-  const urls = getNodeUrls();
+const checkNodes = async (id) => {
+  const urls = getStartedNodeUrls(id);
   const axiosList = urls
-    .map((url) => axios.get(`${url}/ALIVE`, {
-      params: {
-        senderUrl: }}));
+    .map((url) => axios.get(`${url}/ALIVE`));
   const responses = await Promise.all(axiosList);
-  })
-}
+  return responses;
+};
+
 
 module.exports = {
   checkLeader,
