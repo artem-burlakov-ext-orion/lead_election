@@ -14,7 +14,8 @@ app.use(routes);
 
 const nodeStarter = (id) => {
   const port = getPortById(id);
-  app.listen(port, () => console.log(`NODE RUNNING ON PORT ${port}`))
+  app.listen(port, () => console.log(`NODE RUNNING ON PORT ${port}`));
+  setNodeStarted(id); // state changed  - brrrr!
   startElection();
   val(() => startcheckNodes(id), process.env.CHECK_PERIOD); 
 };

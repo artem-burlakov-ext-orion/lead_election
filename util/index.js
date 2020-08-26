@@ -1,4 +1,4 @@
-const getConfig = require('./json');
+const { getConfig, saveConfig } = require('./json');
 
 const getPortByid = async (id) => {
   const config = await getConfig();
@@ -20,6 +20,12 @@ const getStartedNodeUrls = async (id) => {
   const urls = getUrls(startedNodeConfig);
   return urls;
 }
+
+const setNodeStarted = async (id) => {
+  const config = await getConfig();
+  config.find((node) => node.id === id).isStarted = true;
+  await saveConfig(config);
+};
 
 module.export = {
   getPortByid,

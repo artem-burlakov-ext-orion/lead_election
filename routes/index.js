@@ -1,9 +1,11 @@
 const { Router } = require('express');
-const { sendOk } = require('../middlwares/index');
+const { sendIAmFine, setTheKing } = require('../middlwares/index');
 
 const router = Router();
 
-router.get('/ALIVE', sendOk);
+router.get('/ALIVE', sendIAmFine);
+
+router.get('/IAMTHEKING/:id', setTheKing);
 
 
 module.exports = router;
