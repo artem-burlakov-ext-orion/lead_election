@@ -1,6 +1,6 @@
 const { getConfig, saveConfig } = require('./json');
 
-const getPortByid = async (id) => {
+const getPortById = async (id) => {
   const config = await getConfig();
   return config.find((node) => node.id === id).port
 };
@@ -10,13 +10,13 @@ const getUrls = (config) => {
   return urls;
 };
 
-const isValid = (senderNodeId, nodeConfig) => {
+const isNodeValidToSendAlive = (senderNodeId, nodeConfig) => {
   return nodeConfig.id < senderNodeId && nodeConfig.isStarted;
 }
 
 const getStartedNodeUrls = async (id) => {
   const config = await getConfig();
-  const startedNodeConfig = config.filter((node) => isValid(id, node));
+  const startedNodeConfig = config.filter((node) => isNodeValidToSendAlive(id, node));
   const urls = getUrls(startedNodeConfig);
   return urls;
 }
@@ -27,7 +27,14 @@ const setNodeStarted = async (id) => {
   await saveConfig(config);
 };
 
-module.export = {
-  getPortByid,
-  getStartedNodeUrls
+const isIdValid = (id) => {
+  //isNumeric && <= config.length
+  const config = await getConfig();
+  return id <= config.length - 1;
+};
+
+module.exports = {
+  getPortById,
+  getStartedNodeUrls,
+  setNodeStarted,
 };
