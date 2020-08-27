@@ -5,6 +5,12 @@ const getPortById = async (id) => {
   return config.find((node) => node.id === id).port
 };
 
+const getUrlById = async (id) => {
+  const allNodesConfig = await getConfig();
+  const config = allNodesConfig.find((node) => node.id === id);
+  return `${config.ip}: ${config.port}`;
+}
+
 const getUrls = (config) => {
   const urls = config.map((node) => `${node.ip}:${node.port}`);
   return urls;

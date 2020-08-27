@@ -1,6 +1,15 @@
 const axios = require('axios');
-const { getStartedNodeUrls } = require('./util/index');
+const { getStartedNodeUrls, getUrlById } = require('./util/index');
+const { getLeaderIdFromJson } = require('./util/json');
 
+
+
+const checkLeader = async () => {
+  const id = await getLeaderIdFromJson();
+  const url = await getUrlById(id);
+    
+
+}
 
 const isAtLeastOneNodeAlive = (responses) => {
   const isAlive = responses.find((response) => response === 'FINETHANKS');
