@@ -38,7 +38,7 @@ const getLeaderIdFromJson = async () => {
   }
 }
 
-const setLeaderIdToJson = async (data) => {
+const setLeaderId = async (data) => {
   try {
     const leaderPath = getJsonPath('leader.json');
     await fs.writeFile(leaderPath, JSON.stringify(data, null, '\t'));
@@ -51,5 +51,5 @@ module.exports = {
   getConfig,
   saveConfig,
   getLeaderIdFromJson,
-  setLeaderIdToJson,
+  setLeaderId,
 };

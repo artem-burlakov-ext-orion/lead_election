@@ -3,14 +3,19 @@ const { getStartedNodeUrls, getUrlById } = require('./util/index');
 const { getLeaderIdFromJson } = require('./util/json');
 
 
+const startCheckingLeader = () => setInterval(checkLeader, process.env.CHECK_PERIOD);
 
 const checkLeader = async () => {
-  const id = await getLeaderIdFromJson();
-  const url = await getUrlById(id);
-    
+  try {
+    const id = await getLeaderIdFromJson();
+    const url = await getUrlById(id);
+    const response = await axios.get(`${url}/PING`);
+  } catch (e) {
+    return e;
+  }
+};
 
-}
-
+conat 
 const isAtLeastOneNodeAlive = (responses) => {
   const isAlive = responses.find((response) => response === 'FINETHANKS');
   return isAlive.length > 0;
@@ -23,12 +28,6 @@ const startElection = async (id) => {
     await sendNodeIsLeader(urls, id);
     return true;
   }
-  
-
-  
-
-
-  
 }
 
 const sendNodeIsLeader = async (urls, id) => {

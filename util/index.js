@@ -43,4 +43,5 @@ module.exports = {
   getPortById,
   getStartedNodeUrls,
   setNodeStarted,
+  getUrlById,
 };
