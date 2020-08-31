@@ -16,22 +16,12 @@ const getUrls = (config) => {
   return urls;
 };
 
-const isNodeValidToSendAlive = (senderNodeId, nodeConfig) => {
-  return nodeConfig.id < senderNodeId && nodeConfig.isStarted;
-}
-
-const getStartedNodeUrls = async (id) => {
+const getSeniorNodeUrls = async (id) => {
   const config = await getConfig();
-  const startedNodeConfig = config.filter((node) => isNodeValidToSendAlive(id, node));
-  const urls = getUrls(startedNodeConfig);
+  const seniorNodeConfig = config.filter((node) => node.id < id);
+  const urls = getUrls(seniorNodeConfig);
   return urls;
 }
-
-const setNodeStarted = async (id) => {
-  const config = await getConfig();
-  config.find((node) => node.id === id).isStarted = true;
-  await saveConfig(config);
-};
 
 const isIdValid = (id) => {
   //isNumeric && <= config.length
@@ -41,7 +31,6 @@ const isIdValid = (id) => {
 
 module.exports = {
   getPortById,
-  getStartedNodeUrls,
-  setNodeStarted,
   getUrlById,
+  getSeniorNodeUrls,
 };

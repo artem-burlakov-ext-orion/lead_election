@@ -1,40 +1,5 @@
 const axios = require('axios');
-const { getStartedNodeUrls, getUrlById } = require('./util/index');
-const { getLeaderIdFromJson } = require('./util/json');
-
-
-const startCheckingLeader = () => setInterval(checkLeader, process.env.CHECK_PERIOD);
-
-const checkLeader = async () => {
-  try {
-    const id = await getLeaderIdFromJson();
-    const url = await getUrlById(id);
-    const response = await axios.get(`${url}/PING`);
-  } catch (e) {
-    return e;
-  }
-};
-
-conat 
-const isAtLeastOneNodeAlive = (responses) => {
-  const isAlive = responses.find((response) => response === 'FINETHANKS');
-  return isAlive.length > 0;
-};
-
-const startElection = async (id) => {
-  const urls = getStartedNodeUrls(id);
-  const responses = await checkNodes(urls);
-  if (!isAtLeastOneNodeAlive(responses)) {
-    await sendNodeIsLeader(urls, id);
-    return true;
-  }
-}
-
-const sendNodeIsLeader = async (urls, id) => {
-  const axiosList = urls
-    .map((url) => axios.get(`${url}/IAMTHEKING/:${id}`));
-    await Promise.all(axiosList);
-};
+const { getUrlById } = require('./util/index');
 
 const checkNodes = async (urls) => {
   const axiosList = urls
@@ -43,6 +8,21 @@ const checkNodes = async (urls) => {
   return responses;
 };
 
+const sendNodeIsLeader = async (urls, id) => {
+  const axiosList = urls
+    .map((url) => axios.get(`${url}/IAMTHEKING/:${id}`));
+    await Promise.all(axiosList);
+};
+
+const  startCheckLeader = async (url) => {
+  const response = await axios.get(`${url}/CHECK`);
+  return response;
+};
+
+
+
 module.exports = {
-  startElection
+  checkNodes,
+  sendNodeIsLeader,
+  getLeaderId,
 };

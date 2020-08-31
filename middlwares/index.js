@@ -1,16 +1,31 @@
-const httpContext = require('express-http-context');
-const { setLeaderIdToJson } = require('../util/json');
+const { getUrlById } = require("../util");
 
 const setLeaderId = async (req, res, next) => {
-  try {
-    const data = { leaderId: req.params.id};
-    await setLeaderIdToJson(data);
-    res.status(200);
-    next();
-  } catch (e) {
-    next(e);
-  }
+  req.app.locals.leaderId = req.params.id;
+  res.status(200);
+  next();
 };
+
+const sendLeaderId = (req, res, next) => {
+  const leaderId = req.app.locals.leaderId;
+  res.status(200);
+  res.send({
+    id: leaderId
+  });
+  next();
+};
+
+const sendLeaderAnswer = (req, res, next) => {
+  res.status(200);
+  next();
+};
+
+const sendPingToleader = (req, res, next) => {
+  const id = ...,
+  const url = getUrlById(id);
+  const response = await sendPing(url);
+  next();
+}
 
 const sendIAmFine = (req, res, next) => {
   res.status(200);
@@ -20,5 +35,6 @@ const sendIAmFine = (req, res, next) => {
 
 module.exports = {
   sendIAmFine,
-  setLeaderId 
+  setLeaderId,
+  sendLeaderAnswer 
 };

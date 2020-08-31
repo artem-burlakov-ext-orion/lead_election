@@ -27,29 +27,7 @@ const saveConfig = async (config) => {
   }
 };
 
-const getLeaderIdFromJson = async () => {
-  try {
-    const leaderPath = getJsonPath('leader.json');
-    const json = await fs.readFile(leaderPath);
-    const id = JSON.parse(json);
-    return id;
-  } catch (e) {
-    next(e);
-  }
-}
-
-const setLeaderId = async (data) => {
-  try {
-    const leaderPath = getJsonPath('leader.json');
-    await fs.writeFile(leaderPath, JSON.stringify(data, null, '\t'));
-  } catch (e) {
-    next(e);
-  }
-}
-
 module.exports = {
   getConfig,
   saveConfig,
-  getLeaderIdFromJson,
-  setLeaderId,
 };
