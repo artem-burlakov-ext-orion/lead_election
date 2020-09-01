@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { getUrlById } = require('./util/index');
+const { leaderId, } = require('./app');
 
 const checkNodes = async (urls) => {
   const axiosList = urls
@@ -14,15 +15,23 @@ const sendNodeIsLeader = async (urls, id) => {
     await Promise.all(axiosList);
 };
 
-const  startCheckLeader = async (url) => {
-  const response = await axios.get(`${url}/CHECK`);
-  return response;
+const checkLeader = async (id) => {
+  console.log('CHECK');
+  console.log(id);
+  console.log(leaderId);
+  if (id !== leaderId) {
+    console.log('START PING');
+    const url = getUrlById(leaderId);
+    console.log(url);
+    const response = await axios.get(`${url}/PING`);
+    console.log(response);
+    return response;
+  }
 };
-
 
 
 module.exports = {
   checkNodes,
   sendNodeIsLeader,
-  getLeaderId,
+  checkLeader,
 };

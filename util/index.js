@@ -1,8 +1,12 @@
 const { getConfig, saveConfig } = require('./json');
 
 const getPortById = async (id) => {
+  // console.log('ID: ', id);
   const config = await getConfig();
-  return config.find((node) => node.id === id).port
+  console.log(id);
+  console.log(config);
+  const nodeConfig = config.find((node) => node.id === id);
+  return nodeConfig.port;
 };
 
 const getUrlById = async (id) => {
@@ -23,7 +27,7 @@ const getSeniorNodeUrls = async (id) => {
   return urls;
 }
 
-const isIdValid = (id) => {
+const isIdValid = async (id) => {
   //isNumeric && <= config.length
   const config = await getConfig();
   return id <= config.length - 1;

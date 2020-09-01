@@ -1,5 +1,5 @@
 const { getSeniorNodeUrls, getUrlById } = require('./util/index');
-const { checkNodes, sendNodeIsLeader, sendPingToLeader } = require('./axios');
+const { checkNodes, sendNodeIsLeader, checkLeader } = require('./axios');
 
 const startElection = async (id) => {
   const urls = getSeniorNodeUrls(id);
@@ -9,7 +9,6 @@ const startElection = async (id) => {
     const allUrls = urls.push(nodeUrl);
     await sendNodeIsLeader(allUrls, id);
   }
-
 };
 
 const isAtLeastOneNodeAlive = (responses) => {
@@ -17,9 +16,12 @@ const isAtLeastOneNodeAlive = (responses) => {
   return isAlive.length > 0;
 };
 
-const checkLeader = async (id) => {
-  const url = getUrlById(id);
-  const response = await sendPingToLeader(url);
-}
+const startCheckingLeader = (id) => {
+  console.log('ID: ', id);
+  setInterval(() => checkLeader(id), process.env.CHECK_PERIOD);
+};
 
-module.exports = startElection;
+module.exports = {
+  startElection,
+  startCheckingLeader,
+};
