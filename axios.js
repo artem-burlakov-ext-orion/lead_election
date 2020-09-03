@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { getUrlById } = require('./util/index');
+const { getUrlById, getOtherNodeUrls } = require('./util/index');
 
 const checkNodes = async (urls) => {
   const axiosList = urls
@@ -12,11 +12,11 @@ const sendNodeIsLeader = async (id) => {
   const otherNodeUrls = await getOtherNodeUrls(id);
   const axiosList = otherNodeUrls
     .map((url) => axios.get(`${url}/IAMTHEKING/:${id}`));
-    await Promise.all(axiosList);
+  await Promise.all(axiosList);
 };
 
 // const checkLeader = async (id) => {
-//   const leaderId = 
+//   const leaderId =
 //   if (id !== leaderId) {
 //     try {
 //       const url = await getUrlById(leaderId);
@@ -26,12 +26,9 @@ const sendNodeIsLeader = async (id) => {
 //         const url = getUrlById(id);
 //         await axios.get(`${url}/ERROR`)
 
-        
 //     }
 //   }
 // };
-
-
 
 module.exports = {
   checkNodes,

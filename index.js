@@ -1,3 +1,3 @@
-const argParser  = require('./util/commander');
+const argParser = require('./util/commander');
 
 argParser();

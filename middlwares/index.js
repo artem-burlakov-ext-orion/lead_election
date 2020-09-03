@@ -1,5 +1,5 @@
-const { getUrlById, isNodeSenior } = require("../util/index");
-const { sendPing } = require('../axios');
+const { getUrlById, isNodeSenior } = require('../util/index');
+const { sendPing, sendNodeIsLeader } = require('../axios');
 const { startElection } = require('../main');
 
 const setLeaderId = async (req, res, next) => {
@@ -25,14 +25,13 @@ const sendPingToLeader = async (req, res, next) => {
 };
 
 const checkNodeIsSenior = async (req, res, next) => {
-  const id = req.app.locals.id;
-  if(!isNodeSenior(id)) {
-    next()
+  const { id } = req.app.locals;
+  if (!isNodeSenior(id)) {
+    next();
   }
   req.app.locals.leaderId = id;
   await sendNodeIsLeader(id);
-  return;
-}
+};
 
 const sendIAmFine = (req, res, next) => {
   res.status(200);
@@ -42,7 +41,7 @@ const sendIAmFine = (req, res, next) => {
 
 const startNewElection = async (req, res, next) => {
   await startElection(req.app.locals.id);
-}
+};
 
 // const haltOnTimedout = (req, res, next) => {
 //   if (!req.timedout) next();

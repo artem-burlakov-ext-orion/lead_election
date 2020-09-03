@@ -16,16 +16,13 @@ const getConfig = async () => {
   }
 };
 
-const saveConfig = async (config) => {
-  try {
-    const configPath = getJsonPath(process.env.CONFIG_FILE_NAME);
-    await writeFile(configPath, JSON.stringify(config, null, '\t'));
-  } catch (e) {
-    next(e);
-  }
-};
+// const saveConfig = async (config) => {
+//   try {
+//     const configPath = getJsonPath(process.env.CONFIG_FILE_NAME);
+//     await writeFile(configPath, JSON.stringify(config, null, '\t'));
+//   } catch (e) {
+//     next(e);
+//   }
+// };
 
-module.exports = {
-  getConfig,
-  saveConfig,
-};
+module.exports = getConfig;
