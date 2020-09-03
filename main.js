@@ -1,27 +1,38 @@
-const { getSeniorNodeUrls, getUrlById } = require('./util/index');
+const { getSeniorNodeUrls, getUrlById, getPortById, getOtherNodeUrls } = require('./util/index');
 const { checkNodes, sendNodeIsLeader, checkLeader } = require('./axios');
+const app = require('./app');
+
+const nodeStarter = async (id) => {
+  app.locals.id = id;
+  const port = await getPortById(id);
+  app.listen(port, () => console.log(`NODE RUNNING ON PORT ${port}`));
+  await startElection(id);
+  //startCheckingLeader(id);
+};
+
+const startCheckingLeader = (id) => setInterval(() => checkLeader(id), process.env.CHECK_PERIOD);
 
 const startElection = async (id) => {
-  const urls = getSeniorNodeUrls(id);
-  const responses = await checkNodes(urls);
-  if (!isAtLeastOneNodeAlive(responses)) {
-    const nodeUrl = getUrlById(id);
-    const allUrls = urls.push(nodeUrl);
-    await sendNodeIsLeader(allUrls, id);
+  try {
+    if (!isNodeSenior(id)) {
+      const seniorNodeUrls = await getSeniorNodeUrls(id);
+      const responses = await checkNodes(seniorNodeUrls);
+      if (isNotAtLeastOneFineThanks(responses)) {
+        await sendNodeIsLeader(id);
+      }
+    }
+  } catch (e) {
+    console.error(e);
   }
 };
 
-const isAtLeastOneNodeAlive = (responses) => {
-  const isAlive = responses.find((response) => response === 'FINETHANKS');
-  return isAlive.length > 0;
-};
+const isNotAtLeastOneFineThanks = (responses) => responses.every(response => isRejected(response) || !isDataValueFineThanks(response));
 
-const startCheckingLeader = (id) => {
-  console.log('ID: ', id);
-  setInterval(() => checkLeader(id), process.env.CHECK_PERIOD);
-};
+const isRejected = (res) => res.status === 'rejected';
+
+const isDataValueFineThanks = (res) => res.status === 'fulfilled' && res.value.data === 'FINETHANKS';
 
 module.exports = {
+  nodeStarter,
   startElection,
-  startCheckingLeader,
 };

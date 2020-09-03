@@ -1,37 +1,40 @@
 const axios = require('axios');
 const { getUrlById } = require('./util/index');
-const { leaderId, } = require('./app');
 
 const checkNodes = async (urls) => {
   const axiosList = urls
     .map((url) => axios.get(`${url}/ALIVE`));
-  const responses = await Promise.all(axiosList);
+  const responses = await Promise.allSettled(axiosList);
   return responses;
 };
 
-const sendNodeIsLeader = async (urls, id) => {
-  const axiosList = urls
+const sendNodeIsLeader = async (id) => {
+  const otherNodeUrls = await getOtherNodeUrls(id);
+  const axiosList = otherNodeUrls
     .map((url) => axios.get(`${url}/IAMTHEKING/:${id}`));
     await Promise.all(axiosList);
 };
 
-const checkLeader = async (id) => {
-  console.log('CHECK');
-  console.log(id);
-  console.log(leaderId);
-  if (id !== leaderId) {
-    console.log('START PING');
-    const url = getUrlById(leaderId);
-    console.log(url);
-    const response = await axios.get(`${url}/PING`);
-    console.log(response);
-    return response;
-  }
-};
+// const checkLeader = async (id) => {
+//   const leaderId = 
+//   if (id !== leaderId) {
+//     try {
+//       const url = await getUrlById(leaderId);
+//       await axios.get(`${url}/PING`);
+//     } catch (e) {
+//       if (e.code === 'ECONNREFUSED') {
+//         const url = getUrlById(id);
+//         await axios.get(`${url}/ERROR`)
+
+        
+//     }
+//   }
+// };
+
 
 
 module.exports = {
   checkNodes,
   sendNodeIsLeader,
-  checkLeader,
+//  checkLeader,
 };

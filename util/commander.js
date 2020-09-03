@@ -1,7 +1,7 @@
 require('dotenv').config();
 const program = require('commander');
 
-const { nodeStarter } = require('../app');
+const nodeStarter = require('../main');
 
 const argParser = () => {
   program

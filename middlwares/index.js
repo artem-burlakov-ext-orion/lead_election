@@ -1,5 +1,6 @@
-const { getUrlById } = require("../util");
+const { getUrlById, isNodeSenior } = require("../util/index");
 const { sendPing } = require('../axios');
+const { startElection } = require('../main');
 
 const setLeaderId = async (req, res, next) => {
   req.app.locals.leaderId = req.params.id;
@@ -9,6 +10,7 @@ const setLeaderId = async (req, res, next) => {
 
 const sendLeaderAnswer = (req, res, next) => {
   res.status(200);
+  res.send('Ok');
   next();
 };
 
@@ -22,11 +24,25 @@ const sendPingToLeader = async (req, res, next) => {
   }
 };
 
+const checkNodeIsSenior = async (req, res, next) => {
+  const id = req.app.locals.id;
+  if(!isNodeSenior(id)) {
+    next()
+  }
+  req.app.locals.leaderId = id;
+  await sendNodeIsLeader(id);
+  return;
+}
+
 const sendIAmFine = (req, res, next) => {
   res.status(200);
   res.send('FINETHANKS');
   next();
 };
+
+const startNewElection = async (req, res, next) => {
+  await startElection(req.app.locals.id);
+}
 
 // const haltOnTimedout = (req, res, next) => {
 //   if (!req.timedout) next();
@@ -37,4 +53,6 @@ module.exports = {
   setLeaderId,
   sendLeaderAnswer,
   sendPingToLeader,
+  checkNodeIsSenior,
+  startNewElection,
 };
