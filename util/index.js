@@ -12,7 +12,8 @@ const getUrlById = async (id) => {
   return `${config.ip}:${config.port}`;
 };
 
-const getUrls = (config) => {
+const getUrls = async () => {
+  const config = await getConfig();
   const urls = config.map((node) => `${node.ip}:${node.port}`);
   return urls;
 };
@@ -33,12 +34,10 @@ const getOtherNodeUrls = async (id) => {
 
 const isNodeSenior = (id) => id === 1;
 
-const isRejected = (res) => res.status === 'rejected';
+const isNodeLeader = (id, leaderId) => id === leaderId;
 
-const isDataValueFineThanks = (res) => res.status === 'fulfilled' && res.value.data === 'FINETHANKS';
-
-const isNotAtLeastOneFineThanks = (responses) => responses
-  .every((response) => isRejected(response) || !isDataValueFineThanks(response));
+const isAtLeastOneFineThanks = (responses) => responses
+  .some((response) => response.status === 'fulfilled' && response.value.data === 'FINETHANKS');
 
 module.exports = {
   getPortById,
@@ -46,5 +45,7 @@ module.exports = {
   getSeniorNodeUrls,
   getOtherNodeUrls,
   isNodeSenior,
-  isNotAtLeastOneFineThanks,
+  isNodeLeader,
+  isAtLeastOneFineThanks,
+  getUrls,
 };

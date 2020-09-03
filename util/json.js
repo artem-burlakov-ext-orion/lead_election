@@ -1,7 +1,6 @@
 const fs = require('fs').promises;
 require('dotenv').config();
 const path = require('path');
-const { writeFile } = require('fs');
 
 const getJsonPath = (fileName) => path.join(__dirname, '..', 'json', fileName);
 
@@ -15,14 +14,5 @@ const getConfig = async () => {
     console.error(e);
   }
 };
-
-// const saveConfig = async (config) => {
-//   try {
-//     const configPath = getJsonPath(process.env.CONFIG_FILE_NAME);
-//     await writeFile(configPath, JSON.stringify(config, null, '\t'));
-//   } catch (e) {
-//     next(e);
-//   }
-// };
 
 module.exports = getConfig;

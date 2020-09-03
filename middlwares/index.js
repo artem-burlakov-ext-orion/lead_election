@@ -41,6 +41,7 @@ const sendIAmFine = (req, res, next) => {
 
 const startNewElection = async (req, res, next) => {
   await startElection(req.app.locals.id);
+  next();
 };
 
 // const haltOnTimedout = (req, res, next) => {

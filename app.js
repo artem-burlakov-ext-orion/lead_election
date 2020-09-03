@@ -9,8 +9,6 @@ const app = express();
 
 app.use(routes);
 
-app.locals.leaderId = 1;
-
 // app.use(timeout(process.env.TIMEOUT));
 // app.use(haltOnTimedout);
 
