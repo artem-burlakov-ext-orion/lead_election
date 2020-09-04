@@ -8,19 +8,34 @@ const {
 } = require('./util/index');
 const { checkNodes, sendNodeIsLeader, sendPing } = require('./axios');
 
+
+
 const startElection = async (id) => {
-  try {
     if (!isNodeSenior(id)) {
+      console.log('!!!!');
       const responses = await checkNodes(id);
-      
+      console.log('RRRR: ', responses);
+      setTimeOutToCheckResponses(responses);
+
       if (!isAtLeastOneFineThanks(responses)) {
+
         await sendNodeIsLeader(id);
       }
     }
-  } catch (e) {
-    console.error(e);
-  }
 };
+
+const checkResponses = (responses) => {
+  if (!isAtLeastOneFineThanks(responses)) {
+    await sendNodeIsLeader(id);
+    return;
+  }
+  setTimeOutToLeaderAnswer();
+
+}
+
+const setTimeOutToCheckResponses = () => setTimeout(() => checkResponses(responses), process.env.CHECK_PERIOD);
+
+const setTimeOutToLeaderAnswer = () => setTimeout(() => waitLeaderAnswer(responses), process.env.CHECK_PERIOD)
 
 const checkLeader = async (id) => {
   const { leaderId } = app.locals;

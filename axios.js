@@ -1,17 +1,20 @@
 const axios = require('axios');
-const { getUrls, getSeniorNodeUrls } = require('./util/index');
+const { getAllUrls, getSeniorNodeUrls, getOtherNodeUrls } = require('./util/index');
 
 const checkNodes = async (id) => {
-  const seniorNodeUrls = await getSeniorNodeUrls(id);
-  console.log('urls: ', seniorNodeUrls);
-  const axiosList = seniorNodeUrls
-    .map((url) => axios.get(`${url}/ALIVE`));
-  const responses = await Promise.allSettled(axiosList);
-  return responses;
+  try {
+    const seniorNodeUrls = await getSeniorNodeUrls(id);
+    const axiosList = seniorNodeUrls
+      .map((url) => axios.get(`${url}/ALIVE`));
+    const responses = await Promise.allSettled(axiosList);
+    return responses;
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 const sendNodeIsLeader = async (id) => {
-  const urls = await getUrls();
+  const urls = await getAllUrls();
   const axiosList = urls
     .map((url) => axios.get(`${url}/IAMTHEKING/:${id}`));
   await Promise.all(axiosList);

@@ -2,8 +2,12 @@ const { getUrlById, isNodeSenior } = require('../util/index');
 const { sendPing, sendNodeIsLeader } = require('../axios');
 const { startElection } = require('../main');
 
-const setLeaderId = async (req, res, next) => {
+const setLeaderId = (req, res, next) => {
   req.app.locals.leaderId = req.params.id;
+  console.log('-----------------');
+  console.log('id: ', req.app.locals.id);
+  console.log('leaderId: ', req.app.locals.leaderId);
+  console.log('----------------');
   res.status(200);
   next();
 };
