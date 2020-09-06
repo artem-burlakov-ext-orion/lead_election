@@ -8,34 +8,42 @@ const {
 } = require('./util/index');
 const { checkNodes, sendNodeIsLeader, sendPing } = require('./axios');
 
+const checkResponses = async (id) => {
+  const responses = await checkNodes(id);
+  if (isAtLeastOneFineThanks(responses)) {
+    return true;
+  }
+  return new Error('no one finethanks');
+};
 
+const runElection = async (id) => {
+  let timeoutId;
+  const setCheckNodesTimeout = new Promise((resolve, reject) => {
+    timeoutId = setTimeout(() => reject('checkNodes timeout'), process.env.CHECK_PERIOD);
+  });
+  try {
+    const isFineThanks = await Promise.race([setCheckNodesTimeout, () => checkResponses(id)]);
+    const setLeaderAnswerTimeout = new Promise((resolve, reject) => {
+      timeoutId2 = setTimeout(() => reject('leaderAnswer timeout'), process.env.CHECK_PERIOD);
+    })
+    await Promise.race([setLeaderAnswerTimeout, ])
+    
+
+  } catch (e) {
+    if (e === 'checkNodes timeout') {
+      clearTimeout(timeoutId) // not need!
+      await sendNodeIsLeader(id);
+    }
+  }
+  
 
 const startElection = async (id) => {
     if (!isNodeSenior(id)) {
-      console.log('!!!!');
-      const responses = await checkNodes(id);
-      console.log('RRRR: ', responses);
-      setTimeOutToCheckResponses(responses);
-
-      if (!isAtLeastOneFineThanks(responses)) {
-
-        await sendNodeIsLeader(id);
+  
+      
       }
     }
 };
-
-const checkResponses = (responses) => {
-  if (!isAtLeastOneFineThanks(responses)) {
-    await sendNodeIsLeader(id);
-    return;
-  }
-  setTimeOutToLeaderAnswer();
-
-}
-
-const setTimeOutToCheckResponses = () => setTimeout(() => checkResponses(responses), process.env.CHECK_PERIOD);
-
-const setTimeOutToLeaderAnswer = () => setTimeout(() => waitLeaderAnswer(responses), process.env.CHECK_PERIOD)
 
 const checkLeader = async (id) => {
   const { leaderId } = app.locals;

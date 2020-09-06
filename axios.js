@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { getAllUrls, getSeniorNodeUrls, getOtherNodeUrls } = require('./util/index');
+const { getAllUrls, getSeniorNodeUrls } = require('./util/index');
 
 const checkNodes = async (id) => {
   try {

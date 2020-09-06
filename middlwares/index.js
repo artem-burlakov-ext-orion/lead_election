@@ -12,6 +12,11 @@ const setLeaderId = (req, res, next) => {
   next();
 };
 
+const newSetLeaderId = new Promise((resolve, reject) => {
+  
+})
+
+
 const sendLeaderAnswer = (req, res, next) => {
   res.status(200);
   res.send('Ok');
@@ -47,10 +52,6 @@ const startNewElection = async (req, res, next) => {
   await startElection(req.app.locals.id);
   next();
 };
-
-// const haltOnTimedout = (req, res, next) => {
-//   if (!req.timedout) next();
-// }
 
 module.exports = {
   sendIAmFine,
