@@ -8,6 +8,9 @@ const {
 } = require('./util/index');
 const { checkNodes, sendNodeIsLeader, sendPing } = require('./axios');
 
+
+const DELAY = process.env.CHECK_PERIOD;
+
 const getAndCheckResponses = async (id) => {
   const responses = await checkNodes(id);
   if (isAtLeastOneFineThanks(responses)) {
@@ -51,24 +54,25 @@ const startElection = async (id) => {
 const checkLeader = async (id) => {
   const { leaderId } = app.locals;
   if (!isNodeLeader(id, leaderId)) {
-    try {
       const url = await getUrlById(leaderId);
       const response = await sendPing(url);
-      console.log(response);
-      app.locals.error = 0;
-    } catch (e) {
-      if (e.code === 'ECONNREFUSED') {
-        if (app.locals.error < 4) {
-          app.locals.error += 1;
-          return;
-        }
-        await startElection(id);
-      }
-    }
+      return response;
   }
 };
 
-const startCheckingLeader = (id) => setInterval(() => checkLeader(id), process.env.CHECK_PERIOD);
+const isLeaderAlive = (id, timeoutId) => {
+  try {
+    const response = await checkLeader(id);
+    timeoutId.refresh();
+    return true;
+  } catch (e) {
+    if (e.code === 'ECONNREFUSED') {
+
+    }
+    
+
+  }
+}
 
 const nodeStarter = async (id) => {
   app.locals.id = id;
@@ -76,7 +80,17 @@ const nodeStarter = async (id) => {
   const port = await getPortById(id);
   app.listen(port, () => console.log(`NODE RUNNING ON PORT ${port}`));
   await startElection(id);
-  startCheckingLeader(id);
+
+
+  
+
+  let timeoutId3;
+  const setLeaderAliveTimeout = new Promise((resolve, reject) => {
+    timeoutId3 = setTimeout(() => reject('leaderAlive timeout'), 4 * DELAY);
+  });
+
+  setInterval(() => Promise.race(setLeaderAliveTimeout, () => startCheckingLeader(id, timeoutId3)), DELAY);
+
 };
 
 module.exports = {

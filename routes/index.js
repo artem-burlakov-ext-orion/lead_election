@@ -6,13 +6,14 @@ const {
   sendLeaderAnswer,
   checkNodeIsSenior,
   startNewElection,
+  isLeaderAnswerExist,
 } = require('../middlwares/index');
 
 const router = Router();
 
 router.get('/ALIVE', checkNodeIsSenior, sendIAmFine, startNewElection);
 
-router.get('/IAMTHEKING/:id', setLeaderId);
+router.post('/IAMTHEKING/:id', isLeaderAnswerExist, setLeaderId);
 
 router.get('/PING', sendLeaderAnswer);
 

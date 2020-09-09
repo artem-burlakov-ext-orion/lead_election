@@ -2,12 +2,16 @@ const { getUrlById, isNodeSenior } = require('../util/index');
 const { sendPing, sendNodeIsLeader } = require('../axios');
 const { startElection } = require('../main');
 
+const isLeaderAnswerExist = (req, res, next) => {
+  return new Promise((resolve, reject) => {
+    resolve(true);
+    next();
+  })
+};
+
+
 const setLeaderId = (req, res, next) => {
   req.app.locals.leaderId = req.params.id;
-  console.log('-----------------');
-  console.log('id: ', req.app.locals.id);
-  console.log('leaderId: ', req.app.locals.leaderId);
-  console.log('----------------');
   res.status(200);
   next();
 };
@@ -60,4 +64,5 @@ module.exports = {
   sendPingToLeader,
   checkNodeIsSenior,
   startNewElection,
+  isLeaderAnswerExist,
 };
